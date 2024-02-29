@@ -1,9 +1,9 @@
 import logging
 
-from .._compat import properties
-from ..backend import KeyringBackend
-from ..credentials import SimpleCredential
-from ..errors import PasswordDeleteError, ExceptionRaisedContext
+from ..._compat import properties
+from ...backend import KeyringBackend
+from ...credentials import SimpleCredential
+from ...errors import PasswordDeleteError, ExceptionRaisedContext
 
 
 with ExceptionRaisedContext() as missing_deps:
