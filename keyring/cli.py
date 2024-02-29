@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Simple command line interface to get/set password from a keyring"""
 
 import getpass
@@ -7,7 +6,9 @@ import sys
 
 from . import core
 from . import backend
+from . import completion
 from . import set_keyring, get_password, set_password, delete_password
+from .util import platform_
 
 
 class CommandLineTool:
@@ -35,9 +36,10 @@ class CommandLineTool:
         self.parser.add_argument(
             "--disable", action="store_true", help="Disable keyring and exit"
         )
+        self.parser._operations = ["get", "set", "del", "diagnose"]
         self.parser.add_argument(
             'operation',
-            help="get|set|del",
+            choices=self.parser._operations,
             nargs="?",
         )
         self.parser.add_argument(
@@ -48,6 +50,7 @@ class CommandLineTool:
             'username',
             nargs="?",
         )
+        completion.install(self.parser)
 
     def run(self, argv):
         args = self.parser.parse_args(argv)
@@ -60,6 +63,10 @@ class CommandLineTool:
 
         if args.disable:
             core.disable()
+            return
+
+        if args.operation == 'diagnose':
+            self.diagnose()
             return
 
         self._check_args()
@@ -87,8 +94,16 @@ class CommandLineTool:
     def do_del(self):
         delete_password(self.service, self.username)
 
+    def diagnose(self):
+        config_root = core._config_path()
+        if config_root.exists():
+            print("config path:", config_root)
+        else:
+            print("config path:", config_root, "(absent)")
+        print("data root:", platform_.data_root())
+
     def invalid_op(self):
-        self.parser.error("Specify operation 'get', 'del', or 'set'.")
+        self.parser.error(f"Specify operation ({', '.join(self.parser._operations)}).")
 
     def _load_spec_backend(self):
         if self.keyring_backend is None:
@@ -118,8 +133,15 @@ class CommandLineTool:
 
     @staticmethod
     def strip_last_newline(str):
-        """Strip one last newline, if present."""
-        return str[: -str.endswith('\n')]
+        r"""Strip one last newline, if present.
+
+        >>> CommandLineTool.strip_last_newline('foo')
+        'foo'
+        >>> CommandLineTool.strip_last_newline('foo\n')
+        'foo'
+        """
+        slc = slice(-1 if str.endswith('\n') else None)
+        return str[slc]
 
 
 def main(argv=None):

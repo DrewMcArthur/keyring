@@ -6,7 +6,7 @@ from ..backend import KeyringBackend
 from ..credentials import SimpleCredential
 from ..errors import PasswordDeleteError
 from ..errors import PasswordSetError, InitError, KeyringLocked
-from ..util import properties
+from .._compat import properties
 
 try:
     import dbus
@@ -37,9 +37,8 @@ class DBusKeyring(KeyringBackend):
     bus_name = 'org.kde.kwalletd5'
     object_path = '/modules/kwalletd5'
 
-    @properties.ClassProperty
-    @classmethod
-    def priority(cls):
+    @properties.classproperty
+    def priority(cls) -> float:
         if 'dbus' not in globals():
             raise RuntimeError('python-dbus not installed')
         try:
@@ -161,7 +160,6 @@ class DBusKeyringKWallet4(DBusKeyring):
     bus_name = 'org.kde.kwalletd'
     object_path = '/modules/kwalletd'
 
-    @properties.ClassProperty
-    @classmethod
+    @properties.classproperty
     def priority(cls):
         return super().priority - 1

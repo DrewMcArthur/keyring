@@ -1,3 +1,4 @@
+import contextlib
 import ctypes
 from ctypes import (
     c_void_p,
@@ -81,9 +82,9 @@ def create_query(**kwargs):
     return CFDictionaryCreate(
         None,
         (c_void_p * len(kwargs))(*[k_(k) for k in kwargs.keys()]),
-        (c_void_p * len(kwargs))(
-            *[create_cfstr(v) if isinstance(v, str) else v for v in kwargs.values()]
-        ),
+        (c_void_p * len(kwargs))(*[
+            create_cfstr(v) if isinstance(v, str) else v for v in kwargs.values()
+        ]),
         len(kwargs),
         _found.kCFTypeDictionaryKeyCallBacks,
         _found.kCFTypeDictionaryValueCallBacks,
@@ -109,7 +110,7 @@ class Error(Exception):
             raise SecAuthFailure(
                 status,
                 "Security Auth Failure: make sure "
-                "python is signed with codesign util",
+                "executable is signed with codesign util",
             )
         raise cls(status, "Unknown Error")
 
@@ -147,7 +148,7 @@ def find_generic_password(kc_name, service, username, not_found_ok=False):
 
 
 def set_generic_password(name, service, username, password):
-    if find_generic_password(name, service, username, not_found_ok=True):
+    with contextlib.suppress(NotFound):
         delete_generic_password(name, service, username)
 
     q = create_query(

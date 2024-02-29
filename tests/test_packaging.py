@@ -1,6 +1,5 @@
-import importlib_metadata as metadata
-
 from keyring import backend
+from keyring.py312compat import metadata
 
 
 def test_entry_point():

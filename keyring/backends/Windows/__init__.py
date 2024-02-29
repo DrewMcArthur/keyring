@@ -1,9 +1,9 @@
 import logging
 
-from ...util import properties
-from ...backend import KeyringBackend
-from ...credentials import SimpleCredential
-from ...errors import PasswordDeleteError, ExceptionRaisedContext
+from .._compat import properties
+from ..backend import KeyringBackend
+from ..credentials import SimpleCredential
+from ..errors import PasswordDeleteError, ExceptionRaisedContext
 
 
 with ExceptionRaisedContext() as missing_deps:
@@ -46,7 +46,7 @@ class DecodingCredential(dict):
         except UnicodeDecodeError:
             decoded_cred_utf8 = cred.decode('utf-8')
             log.warning(
-                "Retrieved an UTF-8 encoded credential. Please be aware that "
+                "Retrieved a UTF-8 encoded credential. Please be aware that "
                 "this library only writes credentials in UTF-16."
             )
             return decoded_cred_utf8
@@ -72,9 +72,8 @@ class WinVaultKeyring(KeyringBackend):
 
     persist = Persistence()
 
-    @properties.ClassProperty
-    @classmethod
-    def priority(cls):
+    @properties.classproperty
+    def priority(cls) -> float:
         """
         If available, the preferred backend on Windows.
         """
