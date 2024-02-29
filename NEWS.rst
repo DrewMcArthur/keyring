@@ -815,7 +815,7 @@ with a major version bump.
     - keyring.backends.kwallet.DBusKeyring
     - keyring.backends.OS_X.Keyring
     - keyring.backends.SecretService.Keyring
-    - keyring.backends.Windows.WinVaultKeyring
+    - keyring.backends.windows.WinVaultKeyring
 
   All other keyrings
   have been moved to a new package, `keyrings.alt
@@ -1301,10 +1301,10 @@ and updated module structure.
   - BasicFileKeyring -> backends.file.BaseKeyring
   - CryptedFileKeyring -> backends.file.EncryptedKeyring
   - UncryptedFileKeyring -> backends.file.PlaintextKeyring
-  - Win32CryptoKeyring -> backends.Windows.EncryptedKeyring
-  - WinVaultKeyring -> backends.Windows.WinVaultKeyring
-  - Win32CryptoRegistry -> backends.Windows.RegistryKeyring
-  - select_windows_backend -> backends.Windows.select_windows_backend
+  - Win32CryptoKeyring -> backends.windows.EncryptedKeyring
+  - WinVaultKeyring -> backends.windows.WinVaultKeyring
+  - Win32CryptoRegistry -> backends.windows.RegistryKeyring
+  - select_windows_backend -> backends.windows.select_windows_backend
   - GoogleDocsKeyring -> backends.Google.DocsKeyring
   - Credential -> keyring.credentials.Credential
   - BaseCredential -> keyring.credentials.SimpleCredential

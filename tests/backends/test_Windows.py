@@ -1,15 +1,15 @@
 import pytest
 
-import keyring.backends.Windows
+import keyring.backends.windows
 from keyring.testing.backend import BackendBasicTests, UNICODE_CHARS
 
 
 @pytest.mark.skipif(
-    not keyring.backends.Windows.WinVaultKeyring.viable, reason="Needs Windows"
+    not keyring.backends.windows.WinVaultKeyring.viable, reason="Needs Windows"
 )
 class TestWinVaultKeyring(BackendBasicTests):
     def init_keyring(self):
-        return keyring.backends.Windows.WinVaultKeyring()
+        return keyring.backends.windows.WinVaultKeyring()
 
     def test_read_odd_length_utf8_password(self):
         """
@@ -56,7 +56,7 @@ class TestWinVaultKeyring(BackendBasicTests):
         assert e_info.value.winerror == 1783
 
     def test_enumerate(self):
-        from keyring.backends.Windows import api as win32cred
+        from keyring.backends.windows import api as win32cred
 
         entries = win32cred.CredEnumerate()
         assert entries
@@ -68,7 +68,7 @@ class TestWinVaultKeyring(BackendBasicTests):
 
 class TestWinVaultAttributesKeyring(TestWinVaultKeyring):
     def init_keyring(self):
-        return keyring.backends.Windows.WinVaultAttributesKeyring()
+        return keyring.backends.windows.WinVaultAttributesKeyring()
 
     def test_long_password_no_error(self):
         service = 'system'
@@ -88,7 +88,7 @@ class TestWinVaultAttributesKeyring(TestWinVaultKeyring):
         assert e_info.value.args[0] == 64 * 256
 
     def test_read_from_attributes(self):
-        from keyring.backends.Windows import api as win32cred
+        from keyring.backends.windows import api as win32cred
 
         service = 'system'
         username = 'user'
@@ -105,7 +105,7 @@ def test_winvault_always_viable():
     """
     The WinVault backend should always be viable on Windows.
     """
-    assert keyring.backends.Windows.WinVaultKeyring.viable
+    assert keyring.backends.windows.WinVaultKeyring.viable
 
 
 @pytest.mark.skipif('sys.platform != "win32"')
@@ -113,4 +113,4 @@ def test_winvaultattributes_always_viable():
     """
     The WinVault backend should always be viable on Windows.
     """
-    assert keyring.backends.Windows.WinVaultAttributesKeyring.viable
+    assert keyring.backends.windows.WinVaultAttributesKeyring.viable

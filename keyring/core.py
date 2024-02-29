@@ -113,7 +113,7 @@ def _load_keyring_class(keyring_name: str) -> typing.Type[backend.KeyringBackend
     These popular names are tested to ensure their presence.
 
     >>> popular_names = [
-    ...      'keyring.backends.Windows.WinVaultKeyring',
+    ...      'keyring.backends.windows.WinVaultKeyring',
     ...      'keyring.backends.macOS.Keyring',
     ...      'keyring.backends.kwallet.DBusKeyring',
     ...      'keyring.backends.SecretService.Keyring',
